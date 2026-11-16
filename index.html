@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My Granny's Apothecary — Redesign concept</title>
+<meta name="description" content="Small-batch herbal teas and custom blends, hand-blended by Amanda. Rooted in Charleston, SC.">
+<meta name="theme-color" content="#2F4A3C">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Figtree:wght@400;500;600;700&family=Young+Serif&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          paper: '#F3ECDC', linen: '#FBF7EC', ink: '#232B26',
+          sage: { 900: '#1E3228', 700: '#2F4A3C', 500: '#5F7D66', 300: '#A9BCA6', 200: '#CFD9C8', 100: '#E4EADC' },
+          clay: { DEFAULT: '#A9573A', dark: '#8B4329', soft: '#E9CDBD' },
+          honey: '#D8A23A'
+        },
+        fontFamily: {
+          display: ['"Young Serif"', 'Georgia', 'serif'],
+          sans: ['Figtree', 'system-ui', 'sans-serif'],
+          hand: ['Caveat', 'cursive']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { background: #F3ECDC; color: #232B26; -webkit-font-smoothing: antialiased; }
+  :focus-visible { outline: 3px solid #D8A23A; outline-offset: 3px; border-radius: 4px; }
+  h1, h2, h3 { text-wrap: balance; }
+  .multiply { mix-blend-mode: multiply; }
+
+  /* One orchestrated moment: the hero settles in on load */
+  @keyframes settle { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .settle { animation: settle .8s cubic-bezier(.2,.7,.2,1) both; }
+  .settle-2 { animation-delay: .15s; } .settle-3 { animation-delay: .3s; }
+
+  /* Cart drawer */
+  dialog#cart { margin: 0 0 0 auto; width: 100%; max-width: 27rem; height: 100dvh; max-height: 100dvh; padding: 0; border: 0; background: #FBF7EC; color: #232B26; }
+  dialog#cart::backdrop { background: rgba(30,50,40,.55); }
+  dialog#cart[open] { animation: slide-in .32s cubic-bezier(.2,.7,.2,1); }
+  @keyframes slide-in { from { transform: translateX(100%); } to { transform: none; } }
+
+  /* The apothecary label */
+  .label-card { background: #FBF7EC; background-image: radial-gradient(rgba(139,67,41,.05) 1px, transparent 1px); background-size: 7px 7px; box-shadow: 0 1px 0 #fff inset, 0 18px 30px -18px rgba(30,50,40,.45); }
+  .label-card::before { content: ''; position: absolute; inset: 7px; border: 1.5px solid #2F4A3C; border-radius: 3px; pointer-events: none; }
+  .label-card::after { content: ''; position: absolute; inset: 11px; border: .5px solid #2F4A3C; border-radius: 2px; pointer-events: none; }
+  .pop { animation: pop .3s ease; }
+  @keyframes pop { 50% { transform: scale(1.04); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body class="font-sans text-[17px] leading-relaxed">
+
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded focus:bg-linen focus:px-4 focus:py-2">Skip to content</a>
+
+<!-- Announcement bar -->
+<p class="bg-sage-700 px-4 py-2 text-center text-sm font-medium text-paper">Free shipping over $25</p>
+
+<!-- Header -->
+<header class="sticky top-0 z-30 border-b border-sage-200 bg-paper/95 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 sm:px-6">
+    <a href="#top" class="shrink-0" aria-label="My Granny's Apothecary, home">
+      <img src="https://mygrannys.com/cdn/shop/files/My_Grannys_Main_Logo.png?height=120&v=1764711584" alt="My Granny's" class="h-9 w-auto sm:h-11"
+           onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'font-display text-xl text-sage-700',textContent:'My Granny\'s'}))">
+    </a>
+    <nav class="ml-auto hidden items-center gap-7 text-[15px] font-medium md:flex" aria-label="Main">
+      <a class="hover:text-clay-dark" href="#teas">Shop teas</a>
+      <a class="hover:text-clay-dark" href="#story">Our story</a>
+      <a class="hover:text-clay-dark" href="#parties">Tea parties</a>
+      <a href="#builder" class="rounded-full bg-sage-700 px-5 py-2.5 text-paper hover:bg-sage-900">Build your blend</a>
+    </nav>
+    <a href="#builder" class="ml-auto whitespace-nowrap rounded-full bg-sage-700 px-4 py-2.5 text-sm font-semibold text-paper md:hidden">Build a blend</a>
+    <button type="button" data-open-cart class="relative grid h-11 w-11 place-items-center rounded-full hover:bg-sage-100" aria-label="Open cart">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.5a1.5 1.5 0 0 1-1.5 1.5H7.7a1.5 1.5 0 0 1-1.5-1.5L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
+      <span id="cart-count" class="absolute -right-0.5 -top-0.5 hidden h-5 min-w-5 place-items-center rounded-full bg-clay px-1 text-xs font-bold text-white"></span>
+    </button>
+    <button type="button" id="menu-btn" class="grid h-11 w-11 place-items-center rounded-full hover:bg-sage-100 md:hidden" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+  <nav id="mobile-menu" class="hidden border-t border-sage-200 px-4 pb-3 md:hidden" aria-label="Mobile">
+    <a class="block border-b border-sage-200 py-3.5 font-medium" href="#builder">Build your custom blend</a>
+    <a class="block border-b border-sage-200 py-3.5 font-medium" href="#teas">Shop teas</a>
+    <a class="block border-b border-sage-200 py-3.5 font-medium" href="#story">Our story</a>
+    <a class="block py-3.5 font-medium" href="#parties">Tea parties</a>
+  </nav>
+</header>
+
+<main id="main">
+
+<!-- Hero -->
+<section id="top" class="relative isolate flex min-h-[82svh] items-end overflow-hidden bg-sage-900 md:min-h-[86vh]">
+  <img src="https://mygrannys.com/cdn/shop/files/tea_pots.jpg?v=1779665684&width=1800" alt="Two glass teapots of herbal tea on a weathered wooden table, with fresh flowers and dried herbs" class="absolute inset-0 -z-20 h-full w-full object-cover object-[58%_center]" fetchpriority="high">
+  <div class="absolute inset-0 -z-10 bg-gradient-to-t from-sage-900 via-sage-900/75 to-sage-900/10 md:bg-gradient-to-r md:from-sage-900/95 md:via-sage-900/70 md:to-transparent"></div>
+  <div class="mx-auto w-full max-w-6xl px-4 pb-12 pt-40 sm:px-6 md:pb-20">
+    <div class="max-w-xl text-paper">
+      <h1 class="settle font-display text-[2.6rem] leading-[1.05] sm:text-6xl md:text-[4.25rem]">From Granny's Charleston kitchen to your cup.</h1>
+      <p class="settle settle-2 mt-5 max-w-md text-lg text-paper/90">Herbal teas blended by hand in small batches, the way Amanda learned growing up. Choose one of hers, or build your own herb by herb.</p>
+      <div class="settle settle-3 mt-8 flex flex-col gap-3 sm:flex-row">
+        <a href="#builder" class="rounded-full bg-honey px-7 py-4 text-center font-semibold text-sage-900 hover:bg-[#E5B352]">Build your custom blend</a>
+        <a href="#teas" class="rounded-full border-2 border-paper/80 px-7 py-4 text-center font-semibold text-paper hover:bg-paper hover:text-sage-900">Shop signature teas</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Custom blend builder -->
+<section id="builder" class="scroll-mt-20 px-4 py-16 sm:px-6 md:py-24">
+  <div class="mx-auto max-w-6xl">
+    <div class="max-w-2xl">
+      <h2 class="font-display text-4xl leading-tight text-sage-900 sm:text-5xl">Build your custom herbal blend</h2>
+      <p class="mt-4 text-lg text-ink/80">Four short steps, right here on the page. Amanda reads every order and blends it by hand for you.</p>
+    </div>
+
+    <div class="mt-10 grid gap-10 lg:grid-cols-[1fr_22rem] lg:gap-14">
+      <form id="blend-form" class="space-y-12" novalidate>
+
+        <fieldset>
+          <legend class="flex items-baseline gap-3 font-display text-2xl text-sage-900"><span class="step-num grid h-9 w-9 shrink-0 translate-y-0.5 place-items-center rounded-full border-2 border-sage-700 font-sans text-base font-bold" data-step="goal">1</span>What is this blend for?</legend>
+          <div id="goals" class="mt-5 grid gap-3 sm:grid-cols-2"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend class="flex items-baseline gap-3 font-display text-2xl text-sage-900"><span class="step-num grid h-9 w-9 shrink-0 translate-y-0.5 place-items-center rounded-full border-2 border-sage-700 font-sans text-base font-bold" data-step="herbs">2</span>Select your herbs</legend>
+          <p id="herb-hint" class="mt-2 pl-12 text-[15px] text-ink/75" aria-live="polite">Choose up to 5. Pick a goal first and we'll suggest a starting point.</p>
+          <div id="herbs" class="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend class="flex items-baseline gap-3 font-display text-2xl text-sage-900"><span class="step-num grid h-9 w-9 shrink-0 translate-y-0.5 place-items-center rounded-full border-2 border-sage-700 font-sans text-base font-bold" data-step="safety">3</span>Herbal interaction check</legend>
+          <div class="mt-5 rounded-2xl bg-sage-100 p-5 sm:p-6">
+            <label for="meds" class="block font-semibold text-sage-900">Optional — Are you currently taking any medications?</label>
+            <p class="mt-1 text-[15px] text-ink/75">Solely used by Amanda to prevent any herbal interactions. Never shared.</p>
+            <textarea id="meds" rows="3" maxlength="300" placeholder="Prescriptions, over-the-counter medicines, supplements, or allergies" class="mt-3 w-full rounded-xl border border-sage-300 bg-linen px-4 py-3 text-base placeholder:text-ink/45 focus:border-sage-700 focus:outline-none focus:ring-2 focus:ring-sage-300"></textarea>
+            <label class="mt-3 flex items-start gap-3 text-[15px]">
+              <input id="pregnant" type="checkbox" class="mt-1 h-5 w-5 shrink-0 accent-[#2F4A3C]">
+              <span>I'm pregnant, nursing, or trying to conceive</span>
+            </label>
+            <p class="mt-4 border-t border-sage-300 pt-4 text-sm text-ink/70">Amanda is an herbalist, not a doctor. Check with yours before starting any new herbs.</p>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend class="flex items-baseline gap-3 font-display text-2xl text-sage-900"><span class="step-num grid h-9 w-9 shrink-0 translate-y-0.5 place-items-center rounded-full border-2 border-sage-700 font-sans text-base font-bold" data-step="size">4</span>Size and your label</legend>
+          <div id="sizes" class="mt-5 grid gap-3 sm:grid-cols-3"></div>
+          <label for="label-name" class="mt-6 block font-semibold text-sage-900">Name your blend</label>
+          <p class="mt-1 text-[15px] text-ink/75">Amanda writes it on the label by hand.</p>
+          <input id="label-name" type="text" maxlength="28" placeholder="e.g. Amanda's Evening Calm" autocomplete="off" class="mt-3 w-full rounded-xl border border-sage-300 bg-linen px-4 py-3.5 text-base placeholder:text-ink/45 focus:border-sage-700 focus:outline-none focus:ring-2 focus:ring-sage-300">
+        </fieldset>
+      </form>
+
+      <!-- Live summary -->
+      <aside class="lg:sticky lg:top-24 lg:self-start" aria-label="Your blend">
+        <div id="label" class="label-card relative mx-auto w-[94%] max-w-sm -rotate-1 rounded-md px-8 pb-8 pt-9 text-center">
+          <p class="font-display text-[15px] text-sage-700">My Granny's Apothecary</p>
+          <p id="l-name" class="mt-3 break-words font-hand text-[2.6rem] font-semibold leading-none text-clay-dark">Your blend</p>
+          <p id="l-goal" class="mt-3 text-sm font-medium text-sage-700">Choose a goal to begin</p>
+          <div class="mx-auto my-4 h-px w-16 bg-sage-700/50"></div>
+          <p id="l-herbs" class="min-h-[3.2rem] font-display text-[15px] leading-snug text-ink">No herbs yet</p>
+          <div class="mx-auto my-4 h-px w-16 bg-sage-700/50"></div>
+          <p id="l-size" class="text-sm text-ink/80"></p>
+          <p class="mt-1 text-sm text-ink/80">Hand-blended in Charleston, SC</p>
+        </div>
+
+        <div class="mx-auto mt-7 max-w-sm">
+          <div class="flex items-baseline justify-between">
+            <span class="font-medium">Custom herbal blend</span>
+            <span id="s-price" class="font-display text-3xl text-sage-900">$20</span>
+          </div>
+          <button type="button" id="add-blend" class="mt-4 w-full rounded-full bg-clay px-6 py-4 font-semibold text-white hover:bg-clay-dark disabled:cursor-not-allowed disabled:bg-sage-300 disabled:text-sage-900/70">Add custom blend to cart</button>
+          <p id="s-missing" class="mt-3 text-center text-[15px] text-ink/75" aria-live="polite"></p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- Signature teas -->
+<section id="teas" class="scroll-mt-20 bg-linen px-4 py-16 sm:px-6 md:py-24">
+  <div class="mx-auto max-w-6xl">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div class="max-w-xl">
+        <h2 class="font-display text-4xl leading-tight text-sage-900 sm:text-5xl">Signature blends</h2>
+        <p class="mt-4 text-lg text-ink/80">Amanda's own recipes, ready to steep. One teaspoon per cup.</p>
+      </div>
+      <a href="https://mygrannys.com/collections/all" class="font-semibold text-clay-dark underline decoration-2 underline-offset-4 hover:text-sage-900">See all teas and accessories</a>
+    </div>
+    <div id="products" class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4"></div>
+  </div>
+</section>
+
+<!-- Story -->
+<section id="story" class="scroll-mt-20 px-4 py-16 sm:px-6 md:py-24">
+  <div class="mx-auto grid max-w-6xl gap-10 md:grid-cols-[5fr_6fr] md:items-center md:gap-16">
+    <div class="relative">
+      <img src="https://mygrannys.com/cdn/shop/files/mygrannytea-11.jpg?v=1770339270&width=900" alt="Dried rosebuds and petals in a hand-glazed violet bowl" loading="lazy" class="aspect-[4/5] w-full rounded-t-[999px] rounded-b-2xl bg-sage-200 object-cover">
+      <div class="absolute -bottom-6 right-3 w-52 rotate-2 bg-[#FFF8DC] px-5 py-4 shadow-lg sm:-right-4 sm:w-60">
+        <p class="text-xs font-semibold text-ink/60">Granny's notes</p>
+        <p class="mt-1 font-hand text-2xl leading-tight text-ink">Local honey, every day, when the pollen comes.</p>
+      </div>
+    </div>
+    <div>
+      <h2 class="font-display text-4xl leading-tight text-sage-900 sm:text-5xl">Our story, rooted in Charleston</h2>
+      <p class="mt-6 text-lg">Amanda grew up in Charleston, South Carolina, in the creek behind the house and out at the beach. She also grew up with allergies, and with ear infections every time water got trapped in her ears.</p>
+      <p class="mt-4 text-lg">Unless she was with her granny. After a swim, Granny had drops of vinegar and herbs ready for her ears, and local honey for the allergies.</p>
+      <blockquote class="my-8 border-l-4 border-honey pl-5 font-display text-2xl leading-snug text-sage-900 sm:text-3xl">
+        “It always amazed me at how well it always worked.”
+        <footer class="mt-3 font-sans text-base font-medium text-ink/70">Amanda Ogier, founder</footer>
+      </blockquote>
+      <p class="text-lg">She started My Granny's in 2024 to honor her grandmother and to share what she knows about the ways nature can care for our bodies. Every blend is still made by hand, in small batches.</p>
+      <div class="mt-7 inline-block -rotate-1 bg-[#FFF8DC] px-5 py-4 shadow-md">
+        <p class="text-xs font-semibold text-ink/60">Granny's notes</p>
+        <p class="mt-1 font-hand text-2xl leading-tight text-ink">After the creek: vinegar and herb drops for the ears.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tea parties -->
+<section id="parties" class="scroll-mt-20 bg-sage-700 px-4 py-16 text-paper sm:px-6 md:py-24">
+  <div class="mx-auto grid max-w-6xl gap-10 md:grid-cols-2 md:gap-16">
+    <div>
+      <h2 class="font-display text-5xl leading-[1.05] sm:text-6xl">Sip. Blend. Connect.</h2>
+      <p class="mt-5 text-lg text-paper/90">Amanda brings the apothecary to your gathering. Guests smell, taste and blend their own tea to take home, with her guiding every table.</p>
+      <ul class="mt-7 space-y-3 text-lg">
+        <li class="flex gap-3"><span class="mt-2.5 h-2 w-2 shrink-0 rounded-full bg-honey"></span>Blend-your-own tea bar, with a pouch for every guest</li>
+        <li class="flex gap-3"><span class="mt-2.5 h-2 w-2 shrink-0 rounded-full bg-honey"></span>Herbal cocktails, mocktail stations and tea ceremonies</li>
+        <li class="flex gap-3"><span class="mt-2.5 h-2 w-2 shrink-0 rounded-full bg-honey"></span>Bridal showers, birthdays, team days and girls' nights</li>
+      </ul>
+      <img src="https://mygrannys.com/cdn/shop/files/ChatGPT_Image_Feb_5_2026_07_51_07_PM.png?v=1770339155&width=900" alt="A table set with dried citrus, herbs, a mortar and a small fire bowl" loading="lazy" class="mt-9 hidden aspect-[16/10] w-full rounded-2xl bg-sage-900 object-cover md:block">
+    </div>
+    <form id="party-form" class="self-start rounded-3xl bg-paper p-6 text-ink sm:p-8">
+      <h3 class="font-display text-2xl text-sage-900">Check a date</h3>
+      <p class="mt-1 text-[15px] text-ink/75">Tell Amanda the basics and she'll reply with availability and pricing.</p>
+      <div class="mt-5 grid gap-4 sm:grid-cols-2">
+        <label class="block text-[15px] font-semibold sm:col-span-2">Your name
+          <input required name="name" autocomplete="name" class="mt-1.5 w-full rounded-xl border border-sage-300 bg-linen px-4 py-3 text-base font-normal focus:border-sage-700 focus:outline-none focus:ring-2 focus:ring-sage-300">
+        </label>
+        <label class="block text-[15px] font-semibold sm:col-span-2">Email
+          <input required type="email" name="email" autocomplete="email" class="mt-1.5 w-full rounded-xl border border-sage-300 bg-linen px-4 py-3 text-base font-normal focus:border-sage-700 focus:outline-none focus:ring-2 focus:ring-sage-300">
+        </label>
+        <label class="block text-[15px] font-semibold sm:col-span-2">Occasion
+          <select name="occasion" class="mt-1.5 w-full rounded-xl border border-sage-300 bg-linen px-4 py-3 text-base font-normal focus:border-sage-700 focus:outline-none focus:ring-2 focus:ring-sage-300">
+            <option>Bridal shower</option><option>Bachelorette</option><option>Birthday</option><option>Team or corporate event</option><option>Something else</option>
+          </select>
+        </label>
+        <label class="block text-[15px] font-semibold">Date
+          <input required type="date" name="date" id="party-date" class="mt-1.5 w-full rounded-xl border border-sage-300 bg-linen px-4 py-3 text-base font-normal focus:border-sage-700 focus:outline-none focus:ring-2 focus:ring-sage-300">
+        </label>
+        <label class="block text-[15px] font-semibold">Guests
+          <input required type="number" name="guests" min="4" max="80" inputmode="numeric" placeholder="12" class="mt-1.5 w-full rounded-xl border border-sage-300 bg-linen px-4 py-3 text-base font-normal focus:border-sage-700 focus:outline-none focus:ring-2 focus:ring-sage-300">
+        </label>
+      </div>
+      <button class="mt-6 w-full rounded-full bg-sage-700 px-6 py-4 font-semibold text-paper hover:bg-sage-900">Ask about this date</button>
+      <p id="party-done" class="mt-4 hidden rounded-xl bg-sage-100 px-4 py-3 text-[15px] font-medium text-sage-900" role="status"></p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- Footer -->
+<footer class="bg-sage-900 px-4 pb-12 pt-14 text-paper sm:px-6">
+  <div class="mx-auto grid max-w-6xl gap-10 md:grid-cols-[1.3fr_1fr_1fr]">
+    <div>
+      <h2 class="font-display text-3xl">Letters from the apothecary</h2>
+      <p class="mt-2 text-paper/80">New blends, seasonal remedies and party dates. About twice a month.</p>
+      <form id="news-form" class="mt-5 flex max-w-md flex-col gap-3 sm:flex-row">
+        <label class="sr-only" for="news-email">Email address</label>
+        <input id="news-email" required type="email" autocomplete="email" placeholder="you@example.com" class="min-w-0 flex-1 rounded-full border border-paper/30 bg-paper/10 px-5 py-3.5 text-base text-paper placeholder:text-paper/50 focus:border-honey focus:outline-none">
+        <button class="rounded-full bg-honey px-6 py-3.5 font-semibold text-sage-900 hover:bg-[#E5B352]">Subscribe</button>
+      </form>
+      <p id="news-done" class="mt-3 hidden text-[15px] font-medium text-honey" role="status">Subscribed. Welcome to the family.</p>
+    </div>
+    <nav aria-label="Shop" class="text-[15px]">
+      <p class="font-semibold">Shop</p>
+      <a class="mt-3 block text-paper/80 hover:text-paper" href="#teas">Signature teas</a>
+      <a class="mt-2 block text-paper/80 hover:text-paper" href="#builder">Custom blends</a>
+      <a class="mt-2 block text-paper/80 hover:text-paper" href="https://mygrannys.com/collections/accessorries">Infusers and accessories</a>
+    </nav>
+    <nav aria-label="About" class="text-[15px]">
+      <p class="font-semibold">About</p>
+      <a class="mt-3 block text-paper/80 hover:text-paper" href="#story">Our story</a>
+      <a class="mt-2 block text-paper/80 hover:text-paper" href="#parties">Tea parties</a>
+      <a class="mt-2 block text-paper/80 hover:text-paper" href="https://mygrannys.com/pages/contact">Contact</a>
+    </nav>
+  </div>
+  <div class="mx-auto mt-12 max-w-6xl border-t border-paper/20 pt-6 text-sm text-paper/65">
+    <p>Our teas are rooted in traditional herbal practice and are not intended to diagnose, treat, cure or prevent any disease. Always check with your doctor before taking new herbs.</p>
+    <p class="mt-3">© 2026 My Granny's Apothecary, Charleston, SC. Redesign concept by CodeCrewSV. This is a demo: no orders or messages are sent.</p>
+  </div>
+</footer>
+
+<!-- Sticky add bar (mobile, while the builder is on screen) -->
+<div id="sticky-bar" class="fixed inset-x-0 bottom-0 z-20 hidden border-t border-sage-200 bg-linen/95 px-4 pt-3 backdrop-blur lg:!hidden" style="padding-bottom: max(.75rem, env(safe-area-inset-bottom))">
+  <div class="flex items-center gap-3">
+    <div class="min-w-0 flex-1">
+      <p id="sb-name" class="truncate text-sm font-semibold">Your blend</p>
+      <p id="sb-meta" class="truncate text-sm text-ink/70"></p>
+    </div>
+    <button type="button" id="sb-add" class="shrink-0 rounded-full bg-clay px-5 py-3 text-[15px] font-semibold text-white disabled:bg-sage-300 disabled:text-sage-900/70">Add to cart</button>
+  </div>
+</div>
+
+<!-- Cart drawer -->
+<dialog id="cart" aria-labelledby="cart-title">
+  <div class="flex h-full flex-col">
+    <div class="flex items-center justify-between border-b border-sage-200 px-5 py-4">
+      <h2 id="cart-title" class="font-display text-2xl text-sage-900">Your cart</h2>
+      <button type="button" id="close-cart" class="grid h-11 w-11 place-items-center rounded-full hover:bg-sage-100" aria-label="Close cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="border-b border-sage-200 px-5 py-3">
+      <p id="ship-text" class="text-sm font-medium"></p>
+      <div class="mt-2 h-1.5 overflow-hidden rounded-full bg-sage-200"><div id="ship-bar" class="h-full rounded-full bg-sage-700 transition-all duration-500" style="width:0"></div></div>
+    </div>
+    <div id="cart-items" class="flex-1 overflow-y-auto px-5"></div>
+    <div id="cart-foot" class="border-t border-sage-200 px-5 pt-4" style="padding-bottom: max(1.25rem, env(safe-area-inset-bottom))">
+      <div class="flex items-baseline justify-between">
+        <span class="font-medium">Subtotal</span>
+        <span id="cart-total" class="font-display text-2xl text-sage-900">$0.00</span>
+      </div>
+      <p class="mt-1 text-sm text-ink/70">Shipping and taxes calculated at checkout.</p>
+      <button type="button" id="checkout" class="mt-4 w-full rounded-full bg-sage-700 px-6 py-4 font-semibold text-paper hover:bg-sage-900">Check out</button>
+      <p id="checkout-note" class="mt-3 hidden rounded-xl bg-sage-100 px-4 py-3 text-sm text-sage-900" role="status">The demo stops here. On the live store this opens Shopify's secure checkout, with the blend details attached to the order.</p>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  const CDN = 'https://mygrannys.com/cdn/shop/files/';
+  const FREE_SHIPPING = 25;
+  // Real variant ID of the existing "Custom Herbal Blend" product on mygrannys.com
+  const CUSTOM_BLEND_VARIANT = 52420447994168;
+
+  const GOALS = [
+    { id: 'daily', name: 'Daily Tasty Sip', note: 'A cup to look forward to, any hour.', suggest: ['peppermint', 'rose', 'hibiscus'],
+      icon: '<path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5V9Z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3.5c0 1 1 1.2 1 2.2M12 3.5c0 1 1 1.2 1 2.2"/>' },
+    { id: 'sleep', name: 'Deep Sleep & Relaxation', note: 'For winding down and quiet evenings.', suggest: ['chamomile', 'lavender', 'lemonbalm'],
+      icon: '<path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5Z"/><path d="M16 4.5h3l-3 3.5h3"/>' },
+    { id: 'allergy', name: 'Allergy & Sinus Relief', note: 'Granny\'s territory: honey and clear air.', suggest: ['elderberry', 'nettle', 'peppermint', 'honey'],
+      icon: '<path d="M12 21V11"/><path d="M12 11c0-4 2.5-6.5 7-7 .3 4.500-2.500 7-7 7Z"/><path d="M12 15c0-3-2-5-6-5.500 0 3.500 2 5.500 6 5.500Z"/>' },
+    { id: 'digest', name: 'Digestion & Calm', note: 'Warm, settling, good after a meal.', suggest: ['ginger', 'fennel', 'chamomile'],
+      icon: '<circle cx="12" cy="12" r="3"/><path d="M12 3c2 2 2 4 0 6M12 21c-2-2-2-4 0-6M3 12c2-2 4-2 6 0M21 12c-2 2-4 2-6 0"/>' }
+  ];
+
+  const HERBS = [
+    { id: 'chamomile', name: 'Chamomile', note: 'Apple-sweet, calming', color: '#E3B94A' },
+    { id: 'lavender', name: 'Lavender', note: 'Floral, relaxing', color: '#8E7DB5' },
+    { id: 'rose', name: 'Rose Petals', note: 'Soft, floral, uplifting', color: '#C76B7E' },
+    { id: 'peppermint', name: 'Peppermint', note: 'Cool, bright, clearing', color: '#5E9C76' },
+    { id: 'lemonbalm', name: 'Lemon Balm', note: 'Citrus, soothing', color: '#A9B84F' },
+    { id: 'elderberry', name: 'Elderberry', note: 'Deep berry, seasonal support', color: '#5B3A5E' },
+    { id: 'nettle', name: 'Nettle Leaf', note: 'Green, mineral-rich', color: '#4F7A48' },
+    { id: 'ginger', name: 'Ginger Root', note: 'Warm, spicy, settling', color: '#C98B3F' },
+    { id: 'fennel', name: 'Fennel Seed', note: 'Sweet, anise-like', color: '#B5A85A' },
+    { id: 'hibiscus', name: 'Hibiscus', note: 'Tart, ruby red', color: '#A8324A' },
+    { id: 'calendula', name: 'Calendula', note: 'Mild, golden, gentle', color: '#E08A2E' },
+    { id: 'honey', name: 'Local Honey infusion', note: 'Charleston honey, lightly sweet', color: '#D8A23A' }
+  ];
+  const MAX_HERBS = 5;
+
+  const SIZES = [
+    { id: '2oz', name: '2 oz pouch', price: 12, cups: 'About 25 to 30 cups' },
+    { id: '4oz', name: '4 oz pouch', price: 20, cups: 'About 50 to 60 cups' },
+    { id: 'jar', name: 'Apothecary glass jar', price: 28, cups: '4 oz in a refillable jar' }
+  ];
+
+  const PRODUCTS = [
+    { id: 'doze', name: 'Doze', kind: 'Herbal sleep tea', price: 8.88, img: 'DozeEdited.jpg?v=1786567719', benefit: 'For a peaceful slide into sleep.', herbs: 'Valerian root, lemon balm, lavender, passionflower', tag: 'Caffeine-free' },
+    { id: 'woosahh', name: 'Woo-Sahh', kind: 'Herbal de-stress tea', price: 8.88, img: 'woosahhedited.jpg?v=1786567938', benefit: 'To unwind, exhale and come back to center.', herbs: 'Lemon balm, oat straw, vervain, lavender, chamomile', tag: 'Caffeine-free' },
+    { id: 'breath', name: 'Breath of Fresh Air', kind: 'Respiratory support tea', price: 9.99, img: 'Breathoffreshairedited.jpg?v=1786567747', benefit: 'Aromatic comfort when your breath feels heavy.', herbs: 'Elderberries, mullein, hyssop, anise seed, thyme, fenugreek', tag: 'Caffeine-free' },
+    { id: 'sampler', name: 'Charleston Discovery Sampler', kind: 'Four 1 oz pouches', price: 26, imgs: ['DozeEdited.jpg?v=1786567719', 'woosahhedited.jpg?v=1786567938', 'Breathoffreshairedited.jpg?v=1786567747', 'nightsoutedited.jpg?v=1786567790'], benefit: 'Try four favorites before choosing yours. Ships free.', herbs: 'Doze, Woo-Sahh, Breath of Fresh Air, Nights Out', tag: 'New idea' }
+  ];
+
+  const $ = (s, r = document) => r.querySelector(s);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const money = n => '$' + (Number.isInteger(n) ? n : n.toFixed(2));
+  const money2 = n => '$' + n.toFixed(2);
+
+  const state = { goal: null, herbs: [], size: '4oz', name: '', meds: '', pregnant: false };
+  let cart = [];
+
+  /* ---------- Builder ---------- */
+  function renderGoals() {
+    $('#goals').innerHTML = GOALS.map(g => {
+      const on = state.goal === g.id;
+      return `<button type="button" data-goal="${g.id}" aria-pressed="${on}" class="flex items-start gap-4 rounded-2xl border-2 p-4 text-left transition-colors ${on ? 'border-sage-700 bg-sage-700 text-paper' : 'border-sage-200 bg-linen hover:border-sage-500'}">
+        <svg class="mt-0.5 shrink-0 ${on ? 'text-honey' : 'text-sage-700'}" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${g.icon}</svg>
+        <span><span class="block font-display text-xl leading-tight">${g.name}</span><span class="mt-1 block text-[15px] ${on ? 'text-paper/85' : 'text-ink/70'}">${g.note}</span></span>
+      </button>`;
+    }).join('');
+  }
+
+  function renderHerbs() {
+    const full = state.herbs.length >= MAX_HERBS;
+    $('#herbs').innerHTML = HERBS.map(h => {
+      const on = state.herbs.includes(h.id);
+      const blocked = full && !on;
+      return `<button type="button" data-herb="${h.id}" aria-pressed="${on}" ${blocked ? 'aria-disabled="true"' : ''} class="relative flex flex-col justify-start rounded-xl border-2 px-3.5 py-3 text-left transition-colors ${on ? 'border-sage-700 bg-sage-100' : 'border-sage-200 bg-linen hover:border-sage-500'} ${blocked ? 'opacity-45' : ''}">
+        <span class="flex items-center gap-2"><span class="h-3 w-3 shrink-0 rounded-full" style="background:${h.color}"></span><span class="font-semibold leading-tight">${h.name}</span></span>
+        <span class="mt-1 block text-sm leading-snug text-ink/70">${h.note}</span>
+        ${on ? '<svg class="absolute right-2 top-2 text-sage-700" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.500l4.500 4.500L19 7.500"/></svg>' : ''}
+      </button>`;
+    }).join('');
+  }
+
+  function renderSizes() {
+    $('#sizes').innerHTML = SIZES.map(s => {
+      const on = state.size === s.id;
+      return `<button type="button" data-size="${s.id}" aria-pressed="${on}" class="flex items-center justify-between gap-3 rounded-2xl border-2 p-4 text-left transition-colors sm:block ${on ? 'border-sage-700 bg-sage-100' : 'border-sage-200 bg-linen hover:border-sage-500'}">
+        <span><span class="block font-semibold leading-tight">${s.name}</span><span class="mt-1 block text-sm text-ink/70">${s.cups}</span></span>
+        <span class="font-display text-2xl text-sage-900 sm:mt-3 sm:block">${money(s.price)}</span>
+      </button>`;
+    }).join('');
+  }
+
+  const herbNames = () => state.herbs.map(id => HERBS.find(h => h.id === id).name);
+  const currentSize = () => SIZES.find(s => s.id === state.size);
+  const blendName = () => state.name.trim() || 'Your blend';
+
+  function renderSummary(pop) {
+    const goal = GOALS.find(g => g.id === state.goal);
+    const size = currentSize();
+    const names = herbNames();
+    $('#l-name').textContent = blendName();
+    $('#l-goal').textContent = goal ? goal.name : 'Choose a goal to begin';
+    $('#l-herbs').textContent = names.length ? names.join(', ') : 'No herbs yet';
+    $('#l-size').textContent = `${size.name}. ${size.cups}.`;
+    $('#s-price').textContent = money(size.price);
+
+    const missing = !goal ? 'Choose a goal to continue.' : !names.length ? 'Add at least one herb to continue.' : '';
+    $('#s-missing').textContent = missing || (size.price >= FREE_SHIPPING ? 'This blend ships free.' : `Add ${money2(FREE_SHIPPING - size.price)} more for free shipping.`);
+    $('#add-blend').disabled = $('#sb-add').disabled = !!missing;
+
+    $('#sb-name').textContent = blendName();
+    $('#sb-meta').textContent = missing || `${names.length} herb${names.length > 1 ? 's' : ''}, ${size.name}, ${money(size.price)}`;
+
+    const done = { goal: !!goal, herbs: names.length > 0, safety: !!(state.meds.trim() || state.pregnant), size: true };
+    document.querySelectorAll('.step-num').forEach(el => {
+      const ok = done[el.dataset.step] && (el.dataset.step !== 'size' || (done.goal && done.herbs));
+      el.classList.toggle('bg-sage-700', ok);
+      el.classList.toggle('text-paper', ok);
+    });
+
+    if (pop) { const l = $('#label'); l.classList.remove('pop'); void l.offsetWidth; l.classList.add('pop'); }
+  }
+
+  $('#goals').addEventListener('click', e => {
+    const b = e.target.closest('[data-goal]'); if (!b) return;
+    const g = GOALS.find(x => x.id === b.dataset.goal);
+    state.goal = g.id;
+    state.herbs = [...g.suggest];
+    $('#herb-hint').textContent = `Amanda's starting point for ${g.name} is selected. Swap anything you like, up to ${MAX_HERBS}.`;
+    renderGoals(); renderHerbs(); renderSummary(true);
+  });
+
+  $('#herbs').addEventListener('click', e => {
+    const b = e.target.closest('[data-herb]'); if (!b) return;
+    const id = b.dataset.herb;
+    if (state.herbs.includes(id)) state.herbs = state.herbs.filter(h => h !== id);
+    else if (state.herbs.length < MAX_HERBS) state.herbs.push(id);
+    else { $('#herb-hint').textContent = `A blend holds up to ${MAX_HERBS} herbs. Remove one to add another.`; return; }
+    $('#herb-hint').textContent = `${state.herbs.length} of ${MAX_HERBS} herbs chosen.`;
+    renderHerbs(); renderSummary(true);
+  });
+
+  $('#sizes').addEventListener('click', e => {
+    const b = e.target.closest('[data-size]'); if (!b) return;
+    state.size = b.dataset.size; renderSizes(); renderSummary(true);
+  });
+
+  $('#label-name').addEventListener('input', e => { state.name = e.target.value; renderSummary(); });
+  $('#meds').addEventListener('input', e => { state.meds = e.target.value; renderSummary(); });
+  $('#pregnant').addEventListener('change', e => { state.pregnant = e.target.checked; renderSummary(); });
+  $('#blend-form').addEventListener('submit', e => e.preventDefault());
+
+  function addBlend() {
+    const size = currentSize();
+    const goal = GOALS.find(g => g.id === state.goal);
+    // These become Shopify line_item.properties. A leading underscore keeps a
+    // property out of the customer-facing checkout while Amanda still sees it on the order.
+    const props = { 'Wellness goal': goal.name, 'Herbs': herbNames().join(', '), 'Size': size.name };
+    if (state.name.trim()) props['Label name'] = state.name.trim();
+    if (state.meds.trim()) props['_Medications'] = state.meds.trim();
+    if (state.pregnant) props['_Pregnant, nursing or trying to conceive'] = 'Yes';
+    cart.push({ key: 'blend-' + Date.now(), title: 'Custom Herbal Blend', variant: CUSTOM_BLEND_VARIANT, price: size.price, qty: 1, img: CDN + 'customblend.jpg?v=1779672032&width=200', props });
+    openCart();
+  }
+  $('#add-blend').addEventListener('click', addBlend);
+  $('#sb-add').addEventListener('click', addBlend);
+
+  /* ---------- Products ---------- */
+  $('#products').innerHTML = PRODUCTS.map(p => {
+    const media = p.imgs
+      ? `<div class="grid h-full w-full grid-cols-2 gap-1 p-3">${p.imgs.map(i => `<img src="${CDN}${i}&width=300" alt="" loading="lazy" class="multiply h-full w-full object-contain">`).join('')}</div>`
+      : `<img src="${CDN}${p.img}&width=600" alt="Loose ${esc(p.name)} tea blend" loading="lazy" class="multiply h-full w-full object-contain p-4">`;
+    return `<article class="flex flex-col overflow-hidden rounded-2xl border border-sage-200 bg-paper">
+      <div class="relative aspect-[5/4] bg-white">${media}
+        <span class="absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-semibold ${p.id === 'sampler' ? 'bg-honey text-sage-900' : 'bg-sage-100 text-sage-900'}">${p.tag}</span>
+      </div>
+      <div class="flex flex-1 flex-col p-5">
+        <h3 class="font-display text-2xl leading-tight text-sage-900">${p.name}</h3>
+        <p class="text-[15px] font-medium text-clay-dark">${p.kind}</p>
+        <p class="mt-3">${p.benefit}</p>
+        <p class="mt-2 text-[15px] text-ink/70">${p.herbs}</p>
+        <div class="mt-auto flex items-center justify-between gap-3 pt-5">
+          <span class="font-display text-2xl text-sage-900">${money2(p.price)}</span>
+          <button type="button" data-add="${p.id}" class="rounded-full border-2 border-sage-700 px-5 py-2.5 text-[15px] font-semibold text-sage-900 hover:bg-sage-700 hover:text-paper">Add to cart</button>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+
+  $('#products').addEventListener('click', e => {
+    const b = e.target.closest('[data-add]'); if (!b) return;
+    const p = PRODUCTS.find(x => x.id === b.dataset.add);
+    const line = cart.find(i => i.key === p.id);
+    if (line) line.qty++;
+    else cart.push({ key: p.id, title: `${p.name} – ${p.kind}`, price: p.price, qty: 1, img: CDN + (p.img || p.imgs[0]) + '&width=200', props: null });
+    openCart();
+  });
+
+  /* ---------- Cart ---------- */
+  const dlg = $('#cart');
+
+  function renderCart() {
+    const count = cart.reduce((n, i) => n + i.qty, 0);
+    const total = cart.reduce((n, i) => n + i.qty * i.price, 0);
+    const badge = $('#cart-count');
+    badge.textContent = count; badge.classList.toggle('hidden', !count); badge.classList.toggle('grid', !!count);
+
+    $('#cart-total').textContent = money2(total);
+    $('#cart-foot').classList.toggle('hidden', !count);
+    $('#checkout-note').classList.add('hidden');
+    $('#ship-bar').style.width = Math.min(100, total / FREE_SHIPPING * 100) + '%';
+    $('#ship-text').textContent = !count ? `Free shipping on orders over $${FREE_SHIPPING}.` : total >= FREE_SHIPPING ? 'Your order ships free.' : `${money2(FREE_SHIPPING - total)} away from free shipping.`;
+
+    if (!count) {
+      $('#cart-items').innerHTML = `<div class="py-16 text-center"><p class="font-display text-2xl text-sage-900">Your cart is empty</p><p class="mt-2 text-ink/70">Start with a blend made just for you.</p><a href="#builder" data-close class="mt-6 inline-block rounded-full bg-sage-700 px-6 py-3 font-semibold text-paper">Build your blend</a></div>`;
+      return;
+    }
+
+    $('#cart-items').innerHTML = cart.map(i => {
+      const props = i.props ? `<dl class="mt-2 space-y-1 text-sm">${Object.entries(i.props).map(([k, v]) => {
+        const priv = k.startsWith('_');
+        return `<div><dt class="inline font-semibold">${esc(priv ? k.slice(1) : k)}:</dt> <dd class="inline text-ink/80">${esc(v)}</dd>${priv ? ' <span class="whitespace-nowrap rounded bg-sage-100 px-1.5 py-0.5 text-xs font-medium text-sage-900">only Amanda sees this</span>' : ''}</div>`;
+      }).join('')}</dl>
+      <details class="mt-3 rounded-lg bg-sage-100 text-sm">
+        <summary class="cursor-pointer px-3 py-2 font-medium text-sage-900">How this order reaches Shopify</summary>
+        <div class="px-3 pb-3"><p class="text-ink/75">The choices travel with the line item, so they appear on the order, the packing slip and the confirmation email. No separate form.</p>
+        <pre class="mt-2 overflow-x-auto rounded bg-sage-900 p-3 text-xs leading-relaxed text-sage-100">${esc(JSON.stringify({ items: [{ id: i.variant, quantity: i.qty, properties: i.props }] }, null, 2))}</pre></div>
+      </details>` : '';
+      return `<div class="border-b border-sage-200 py-5">
+        <div class="flex gap-4">
+          <img src="${i.img}" alt="" class="h-16 w-16 shrink-0 rounded-lg bg-white object-cover">
+          <div class="min-w-0 flex-1">
+            <div class="flex justify-between gap-3"><p class="font-semibold leading-tight">${esc(i.title)}</p><p class="font-semibold">${money2(i.price * i.qty)}</p></div>
+            <div class="mt-2 flex items-center gap-4">
+              <div class="flex items-center rounded-full border border-sage-300">
+                <button type="button" data-qty="-1" data-key="${i.key}" class="grid h-9 w-9 place-items-center text-lg" aria-label="Decrease quantity">−</button>
+                <span class="w-6 text-center text-[15px] font-semibold">${i.qty}</span>
+                <button type="button" data-qty="1" data-key="${i.key}" class="grid h-9 w-9 place-items-center text-lg" aria-label="Increase quantity">+</button>
+              </div>
+              <button type="button" data-remove="${i.key}" class="text-sm font-medium text-clay-dark underline underline-offset-2">Remove</button>
+            </div>
+          </div>
+        </div>
+        ${props}
+      </div>`;
+    }).join('');
+  }
+
+  function openCart() { renderCart(); if (!dlg.open) dlg.showModal(); syncSticky(); }
+  function closeCart() { dlg.close(); }
+  dlg.addEventListener('close', syncSticky);
+  dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('[data-close]')) closeCart(); });
+  $('#close-cart').addEventListener('click', closeCart);
+  document.querySelectorAll('[data-open-cart]').forEach(b => b.addEventListener('click', openCart));
+  $('#checkout').addEventListener('click', () => $('#checkout-note').classList.remove('hidden'));
+
+  $('#cart-items').addEventListener('click', e => {
+    const q = e.target.closest('[data-qty]'), r = e.target.closest('[data-remove]');
+    if (q) { const i = cart.find(x => x.key === q.dataset.key); i.qty += Number(q.dataset.qty); if (i.qty < 1) cart = cart.filter(x => x !== i); renderCart(); }
+    if (r) { cart = cart.filter(x => x.key !== r.dataset.remove); renderCart(); }
+  });
+
+  /* ---------- Sticky add bar (mobile) ---------- */
+  let builderOnScreen = false, addButtonOnScreen = false;
+  function syncSticky() { $('#sticky-bar').classList.toggle('hidden', !builderOnScreen || addButtonOnScreen || dlg.open); }
+  new IntersectionObserver(([en]) => { addButtonOnScreen = en.isIntersecting; syncSticky(); }).observe($('#add-blend'));
+  new IntersectionObserver(([en]) => { builderOnScreen = en.isIntersecting; syncSticky(); }, { rootMargin: '-35% 0px -35% 0px' }).observe($('#blend-form'));
+
+  /* ---------- Menu and forms ---------- */
+  const menuBtn = $('#menu-btn'), menu = $('#mobile-menu');
+  menuBtn.addEventListener('click', () => { const open = menu.classList.toggle('hidden'); menuBtn.setAttribute('aria-expanded', String(!open)); });
+  menu.addEventListener('click', e => { if (e.target.closest('a')) { menu.classList.add('hidden'); menuBtn.setAttribute('aria-expanded', 'false'); } });
+
+  $('#party-date').min = new Date().toISOString().slice(0, 10);
+  $('#party-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const d = new Date(f.get('date') + 'T12:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const done = $('#party-done');
+    done.textContent = `Request ready for ${d}, ${f.get('guests')} guests. Amanda replies within two days. (Demo: nothing was sent.)`;
+    done.classList.remove('hidden');
+  });
+  $('#news-form').addEventListener('submit', e => { e.preventDefault(); $('#news-done').classList.remove('hidden'); e.target.reset(); });
+
+  renderGoals(); renderHerbs(); renderSizes(); renderSummary(); renderCart();
+})();
+</script>
+</body>
+</html>
